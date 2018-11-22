@@ -1,46 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:pruebas02_app/vistaNotas.dart';
+import 'package:pruebas02_app/vistaDisciplina.dart';
+import 'package:pruebas02_app/vistaDatos.dart';
+import 'package:pruebas02_app/vistaMaterias.dart';
 
-class vistaAlumno extends StatelessWidget{
+class vistaAlumnoTest extends StatelessWidget {
   int _index;
   @override
-  vistaAlumno(int index){
-    _index=index;
+  vistaAlumnoTest(int index) {
+    _index = index;
   }
   Widget build(BuildContext context) {
     // TODO: implement build
-
-    switch(_index){
+    switch (_index) {
       case 1:
-        return pantallaNotas('Notas 1');
+        return vistaNotas();
       case 2:
-        return pantallaNotas('otro 2');
+        return vistaDisciplina();
       case 3:
-        return pantallaNotas('otro 3');
+        return vistaMaterias();
       case 4:
-        return pantallaNotas('otro 4');
+        return vistaDatos();
     }
-    return Container(
-      padding: EdgeInsets.only(left: 15.0,right: 15.0,top: 30.0,bottom: 10.0),
-      child: Text('Pagina de datos'),
-    );
   }
 }
 
-class pantallaNotas extends StatelessWidget {
-  String _texto='';
-  pantallaNotas(String texto){
-    _texto=texto;
-  }
-  Widget build(BuildContext context) {
-    return Container(
-      child: ListView(
-        children: <Widget>[
-          Image.network('http://admision.emi.edu.bo/logo.png', height: 120.0),
-          Container(
-            child: Text(_texto),
-          )
-        ],
-      ),
-    );
-  }
-}
