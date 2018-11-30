@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pruebas02_app/controllerAlumno.dart';
+import 'package:pruebas02_app/controllerInicio.dart';
 
 class vistaInicio extends StatelessWidget {
   @override
@@ -18,11 +18,10 @@ class vistaInicio extends StatelessWidget {
         crossAxisCount: boxes,
         childAspectRatio: 1.0,
         children: <Widget>[
-          elemento(context, "Notas", Icons.assignment, Colors.brown, 1),
+          elemento(context, "Notas", Icons.assignment, Colors.indigo, 1),
           elemento(context, "Disicplina", Icons.filter_9_plus, Colors.green, 2),
-          elemento(context, "Materias", Icons.menu, Colors.deepPurpleAccent, 3),
           elemento(
-              context, "Datos", Icons.account_box, Colors.deepOrangeAccent, 4),
+              context, "Datos", Icons.account_box, Colors.deepOrangeAccent, 3),
         ],
       ),
     );
@@ -77,7 +76,7 @@ class elemento extends StatelessWidget {
       new MaterialPageRoute<void>(
         builder: (BuildContext context) {
           return new Container(
-            child: controllerAlumno(_pantalla),
+            child: controllerInicio(_pantalla),
           );
         },
       ),

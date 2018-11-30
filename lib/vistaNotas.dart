@@ -26,7 +26,7 @@ class _vistaNotasState extends State<vistaNotas> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('Notas de Pepe de los palotes T'),
+        title: const Text('Notas de Pepe de los palotes'),
       ),
       body: _pantallaNotas(_gestion,_semes),
     );
@@ -62,7 +62,7 @@ class __pantallaNotasState extends State<_pantallaNotas> {
   @override
   Future<String> sendRequest() async {
     http.Response response =
-        await http.get('http://192.168.10.237/android/estudiante/semestre?gestion=${_gestion}&periodo=${_semestre}');
+        await http.get('http://admision.emi.edu.bo/android/estudiante/semestre?gestion=${_gestion}&periodo=${_semestre}');
     String responseJson = response.body.toString();
     return await responseJson;
   }
@@ -173,8 +173,6 @@ class __pantallaNotasState extends State<_pantallaNotas> {
             0: MaxColumnWidth(FixedColumnWidth(18.0), FractionColumnWidth(0.0)),
             2: MaxColumnWidth(
                 FixedColumnWidth(35.0), FractionColumnWidth(0.09)),
-
-            //1:FractionColumnWidth(.2),
           },
           children: createChildrenTexts(),
         ));

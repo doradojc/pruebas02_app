@@ -13,7 +13,7 @@ class _vistaDisciplinaState extends State<vistaDisciplina> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: const Text('Disciplina de Pepe de los palotes T'),
+        title: const Text('Disciplina de Pepe de los palotes '),
       ),
       body: _pantallaNotas(),
     );
@@ -37,86 +37,27 @@ class __pantallaNotasState extends State<_pantallaNotas> {
   @override
   Future<String> sendRequest() async {
     http.Response response =
-        await http.get('http://192.168.10.237/android/semestre');
+        await http.get('http://admision.emi.edu.bo/android/estudiante/disciplina');
     String responseJson = response.body.toString();
     return await responseJson;
   }
 
   Widget build(BuildContext context) {
-    var notas;
-    if (_textFromFile.isEmpty) {
-      Map data = json.decode('{"Gestion":"-","Semestre":"-","Materia":"-","Nota":"-"}');
-      var notas = data['items'];
-    } else {
-      Map data = json.decode(_textFromFile);
-      var notas = data['items'];
-    }
-    List<TableRow> createChildrenTexts() {
-      List<TableRow> childrenTexts = List<TableRow>();
-      childrenTexts.add(new TableRow(
-        children: [
-          TableCell(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                new Text('Materia'),
-              ],
-            ),
-          ),
-          TableCell(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[new Text('Nota Final')],
-            ),
-          )
-        ],
-      ));
+    Map data = json.decode(_textFromFile);
+    var notas = data['items'];
+    List<Widget> listArray = [];
+    // loop through the json object
+    listArray.add(
+      new ListTile(
+        leading: Icon(Icons.assignment),
+        title: Text('Disciplina 2018-1'),
+        subtitle: Text('puntos '+notas['puntos'].toString()),
+      ),
+    );
 
-      ///carganndo datos
-      if (_textFromFile.isNotEmpty) {
-        for (var items in notas) {
-          childrenTexts.add(new TableRow(
-            children: [
-              TableCell(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    new Text(items['Materia']),
-                  ],
-                ),
-              ),
-              TableCell(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[new Text(items['Nota'].toString())],
-                ),
-              )
-            ],
-          ));
-        }
-        return childrenTexts;
-      } else {
-        return null;
-      }
-    }
 
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      child: ListView(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.map),
-            title: Text('Map'),
-          ),
-          ListTile(
-            leading: Icon(Icons.photo_album),
-            title: Text('Album'),
-          ),
-          ListTile(
-            leading: Icon(Icons.phone),
-            title: Text('Phone'),
-          ),
-        ],
+    return new Container(
+      child: new ListView(children: listArray // add the list here.
       ),
     );
   }
