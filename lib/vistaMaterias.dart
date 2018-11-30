@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
+import 'package:pruebas02_app/vistaNotas.dart';
 
 class vistaMaterias extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -6,41 +10,84 @@ class vistaMaterias extends StatelessWidget {
       appBar: new AppBar(
         title: const Text('Materias de Pepe de los palotes'),
       ),
-      body: _pantallaMaterias(),
+      body: _pantallaNotas(),
     );
     ;
   }
 }
 
-class _pantallaMaterias extends StatelessWidget {
+class _pantallaNotas extends StatefulWidget {
+  @override
+  __pantallaNotasState createState() => __pantallaNotasState();
+}
+
+class __pantallaNotasState extends State<_pantallaNotas> {
+  String _textFromFile = "";
+
+  __pantallaNotasState() {
+    sendRequest().then((val) => setState(() {
+          _textFromFile = val;
+        }));
+  }
+
+  @override
+  Future<String> sendRequest() async {
+    http.Response response =
+        await http.get('http://192.168.10.237/android/estudiante');
+    String responseJson = response.body.toString();
+    return await responseJson;
+  }
+
   Widget build(BuildContext context) {
-    return Container(padding: EdgeInsets.all(10.0),
-        child: Table(
-            border: TableBorder.all(width: 1.0, color: Colors.black),
-            children: [
-              TableRow(
-                children: [
-                  TableCell(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        new Text('Materia'),
-                        new Text('Nota Final')
-                      ],
-                    ),
-                  )
-                ],
-              ),
-              TableRow(
-                children: [
-                  TableCell(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[new Text('Algebra I'), new Text('7.65')],
-                    ),
-                  )
-                ],
-              )
-            ]));
+    List notas;
+ Map data = json.decode(_textFromFile);
+      notas = data['items'];
+    return elemento(context, notas);
+  }
+}
+
+class elemento extends StatelessWidget {
+  BuildContext _context;
+  List _datos;
+  final Color _color = Colors.brown;
+  final IconData _icono = Icons.assignment;
+
+  elemento(BuildContext context, List datos) {
+    _context = context;
+    _datos = datos;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> listArray = [];
+    // loop through the json object
+    for (var items in _datos) {
+      // add the ListTile to an array
+      listArray.add(
+        new ListTile(
+          leading: Icon(Icons.assignment),
+          title: Text(items['PeriodoGestion']+'-'+items['Gestion'].toString()),
+          subtitle: Text(items['semestre'].toString()+'º Semestre'),
+          onTap: () => _showVistaAlumno(items['Gestion'],items['IdPeriodoGestion']),
+        ),
+      );
+    }
+
+    return new Container(
+      child: new ListView(children: listArray // add the list here.
+          ),
+    );
+  }
+
+  void _showVistaAlumno(int ges, int per) {
+    Navigator.of(_context).push(
+      new MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return new Container(
+            child: vistaNotas(ges,per),
+          );
+        },
+      ),
+    );
   }
 }

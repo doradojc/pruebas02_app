@@ -4,17 +4,17 @@ import 'package:pruebas02_app/vistaDisciplina.dart';
 import 'package:pruebas02_app/vistaDatos.dart';
 import 'package:pruebas02_app/vistaMaterias.dart';
 
-class vistaAlumnoTest extends StatelessWidget {
+class controllerAlumno extends StatelessWidget {
   int _index;
   @override
-  vistaAlumnoTest(int index) {
+  controllerAlumno(int index) {
     _index = index;
   }
   Widget build(BuildContext context) {
     // TODO: implement build
     switch (_index) {
       case 1:
-        return vistaNotas();
+        return vistaNotas(2018,1);
       case 2:
         return vistaDisciplina();
       case 3:

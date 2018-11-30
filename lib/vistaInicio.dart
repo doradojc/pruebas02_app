@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:pruebas02_app/vistaAlumno.dart';
+import 'package:pruebas02_app/controllerAlumno.dart';
 
 class vistaInicio extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    int boxes=2;
+    if(width>600)
+      boxes=4;
     // TODO: implement build
     return Container(
       padding:
@@ -11,7 +15,7 @@ class vistaInicio extends StatelessWidget {
       child: GridView.count(
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
-        crossAxisCount: 2,
+        crossAxisCount: boxes,
         childAspectRatio: 1.0,
         children: <Widget>[
           elemento(context, "Notas", Icons.assignment, Colors.brown, 1),
@@ -67,13 +71,17 @@ class elemento extends StatelessWidget {
               ],
             )));
   }
+
   void _showVistaAlumno() {
     Navigator.of(_context).push(
       new MaterialPageRoute<void>(
         builder: (BuildContext context) {
-          return new Container(child: vistaAlumnoTest(_pantalla),);
+          return new Container(
+            child: controllerAlumno(_pantalla),
+          );
         },
       ),
     );
   }
+
 }
