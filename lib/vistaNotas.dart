@@ -1,79 +1,104 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:pruebas02_app/datoNotas.dart';
+import 'package:pruebas02_app/vistaSemestres.dart';
 
-class vistaNotas extends StatefulWidget {
+Future<List<Notas>> fetchPosts(http.Client client, int _gestion, int _semestre) async {
+  //'http://admision.emi.edu.bo/android/estudiante/semestret?gestion=${_gestion}&periodo=${_semestre}';
+  var url =
+      'http://admision.emi.edu.bo/android/estudiante/semestret?gestion=${_gestion}&periodo=${_semestre}';
+  var client = new http.Client();
+  var request = new http.Request('POST', Uri.parse(url));
+  var body = {'type': 'getContacts'};
+  request.bodyFields = body;
+
+  var data = await http.post(url, body: {"type": "getContacts"});
+  //print(data.body);
+  return await compute(parsePosts, data.body);
+}
+
+// A function that will convert a response body into a List<Photo>
+List<Notas> parsePosts(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  return parsed.map<Notas>((json) => Notas.fromJson(json)).toList();
+}
+
+class vistaNotas extends StatelessWidget {
   int _gestion;
   int _semestre;
   @override
-  _vistaNotasState createState() => _vistaNotasState(_gestion,_semestre);
   vistaNotas(int gestion, int semestre){
     _semestre=semestre;
     _gestion=gestion;
   }
 
-}
-
-class _vistaNotasState extends State<vistaNotas> {
-  int _semes;
-  int _gestion;
-  @override
-  _vistaNotasState(int gestion,int semes)  {
-    _semes=semes;
-    _gestion=gestion;
-  }
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: const Text('Notas de Pepe de los palotes'),
-      ),
-      body: _pantallaNotas(_gestion,_semes),
+//    final appTitle = 'Notas de pepe de los palotes';
+    return MaterialApp(
+  //    title: appTitle,
+      home: MyHomePage(_gestion,_semestre),
     );
   }
 }
 
-class _pantallaNotas extends StatefulWidget {
-  int _semes;
-  int _gestion;
-  @override
-  _pantallaNotas(int gestion,int semes){
-    _semes=semes;
+class MyHomePage extends StatelessWidget {
+  final String title = 'Notas de pepe de los palotes';
+  var _gestion;
+  var _periodo;
+  MyHomePage(int gestion, int periodo)
+  {
     _gestion=gestion;
+    _periodo=periodo;
   }
-  __pantallaNotasState createState() => __pantallaNotasState(_gestion,_semes);
+  //MyHomePage({Key key, this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+      ),
+      floatingActionButton: new FloatingActionButton(
+        child: new Icon(Icons.arrow_back),
+        onPressed: () {
+          _accionLogin(context);
+        },
+      ),
+      body: FutureBuilder<List<Notas>>(
+        future: fetchPosts(http.Client(),_gestion,_periodo),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+          return snapshot.hasData
+              ? semestresList(semestres: snapshot.data)
+              : Center(child: CircularProgressIndicator());
+        },
+      ),
+    );
+  }
+
+  void _accionLogin(context) {
+    Navigator.of(context).push(
+      new MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return new Scaffold(
+            body: vistaSemestres(),
+          );
+        },
+      ),
+    );
+  }
 }
 
-class __pantallaNotasState extends State<_pantallaNotas> {
+class semestresList extends StatelessWidget {
+  final List<Notas> semestres;
 
-  int _semestre;
-  int _gestion;
-  String _textFromFile = "";
-
-
-  __pantallaNotasState(int gestion, int semes) {
-    _gestion=gestion;
-    _semestre=semes;
-    sendRequest().then((val) => setState(() {
-          _textFromFile = val;
-        }));
-  }
+  semestresList({Key key, this.semestres}) : super(key: key);
 
   @override
-  Future<String> sendRequest() async {
-    http.Response response =
-        await http.get('http://admision.emi.edu.bo/android/estudiante/semestre?gestion=${_gestion}&periodo=${_semestre}');
-    String responseJson = response.body.toString();
-    return await responseJson;
-  }
-
   Widget build(BuildContext context) {
-    /*for (var items in videos) {
-      print(items['Materia']);
-    }*/
-
-    Map data = json.decode(_textFromFile);
-    var notas = data['items'];
     double width = MediaQuery.of(context).size.width;
     double widthB = 100;
     double widthA = width - widthB;
@@ -121,7 +146,7 @@ class __pantallaNotasState extends State<_pantallaNotas> {
 
       ///carganndo datos
       var cc = 0;
-      for (var items in notas) {
+      for (var items in semestres) {
         cc++;
         childrenTexts.add(new TableRow(
           children: [
@@ -143,7 +168,7 @@ class __pantallaNotasState extends State<_pantallaNotas> {
                   new Container(
                     padding: EdgeInsets.all(2.0),
                     width: widthA,
-                    child: Text(items['Materia'].toString()),
+                    child: Text(items.materia.toString()),
                   )
                 ],
               ),
@@ -154,7 +179,7 @@ class __pantallaNotasState extends State<_pantallaNotas> {
                 children: <Widget>[
                   new Container(
                     padding: EdgeInsets.all(2.0),
-                    child: Text(items['Nota'].toString()),
+                    child: Text(items.nota.toString()),
                   )
                 ],
               ),
@@ -176,5 +201,6 @@ class __pantallaNotasState extends State<_pantallaNotas> {
           },
           children: createChildrenTexts(),
         ));
+
   }
 }

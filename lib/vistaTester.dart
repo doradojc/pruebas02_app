@@ -23,7 +23,7 @@ List<DatosAlumno> parsePosts(String responseBody) {
   return parsed.map<DatosAlumno>((json) => DatosAlumno.fromJson(json)).toList();
 }
 
-class vistaDatos extends StatelessWidget {
+class vistaTester extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appTitle = 'Datos de los palotes';
@@ -169,7 +169,7 @@ class semestresList extends StatelessWidget {
     );
     return new Container(
       child: new ListView(children: listArray // add the list here.
-      ),
+          ),
     );
   }
 }

@@ -20,8 +20,8 @@ class vistaInicio extends StatelessWidget {
         children: <Widget>[
           elemento(context, "Notas", Icons.assignment, Colors.indigo, 1),
           elemento(context, "Disicplina", Icons.filter_9_plus, Colors.green, 2),
-          elemento(
-              context, "Datos", Icons.account_box, Colors.deepOrangeAccent, 3),
+          elemento(context, "Datos", Icons.account_box, Colors.deepOrangeAccent, 3),
+          //elemento(context, "Test", Icons.account_box, Colors.deepOrangeAccent, 4),
         ],
       ),
     );

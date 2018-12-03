@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pruebas02_app/vistaSemestres.dart';
 import 'package:pruebas02_app/vistaDisciplina.dart';
 import 'package:pruebas02_app/vistaDatos.dart';
+//import 'package:pruebas02_app/vistaTester.dart';
 
 class controllerInicio extends StatelessWidget {
   int _index;
@@ -18,6 +19,8 @@ class controllerInicio extends StatelessWidget {
         return vistaDisciplina();
       case 3:
         return vistaDatos();
+      /*case 4:
+        return vistaTester();*/
     }
   }
 }
